@@ -17,14 +17,14 @@
         <img src="{% static 'img/Logo_thomas.jpeg' %}" alt="Logo SmartStock" class="logo-img">
 
         <div class="nav-links">
-          <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">Inicio</a>
+          <a href="{% url 'home' %}" class="{% if request.path == '/home/' %}active{% endif %}">Inicio</a>
           <a href="{% url 'prediction' %}" class="{% if request.path == '/prediction/' %}active{% endif %}">Predicción</a>
-          <a href="{% url 'dashboard' %}" class="{% if request.path == '/dashboard/' %}active{% endif %}">Dashboard</a>
-          <a href="{% url 'operaciones:inventario_list' %}" class="{% if request.path|slice:':13' == '/operaciones/' %}active{% endif %}">Inventario</a>
-          <a href="{% url 'operaciones:ventas_list' %}" class="{% if request.path|slice:':13' == '/operaciones/' %}active{% endif %}">Ventas</a>
-          <a href="{% url 'operaciones:clientes_list' %}" class="{% if request.path|slice:':13' == '/operaciones/' %}active{% endif %}">Clientes</a>
-          <a href="{% url 'operaciones:peso_mockup' %}" class="{% if request.path == '/operaciones/peso/mockup/' %}active{% endif %}">Peso</a>
-          <a href="{% url 'acerca' %}" class="">Acerca</a>
+          <a href="{% url 'dashboard' %}" class="{% if request.path|slice:':11' == '/dashboard/' %}active{% endif %}">Dashboard</a>
+          <a href="{% url 'operaciones:inventario_list' %}" class="{% if request.path|slice:':23' == '/operaciones/inventario/' %}active{% endif %}">Inventario</a>
+          <a href="{% url 'operaciones:ventas_list' %}" class="{% if request.path|slice:':19' == '/operaciones/ventas/' %}active{% endif %}">Ventas</a>
+          <a href="{% url 'operaciones:clientes_list' %}" class="{% if request.path|slice:':21' == '/operaciones/clientes/' %}active{% endif %}">Clientes</a>
+          <a href="{% url 'operaciones:peso_mockup' %}" class="{% if request.path|slice:':18' == '/operaciones/peso/' %}active{% endif %}">Peso</a>
+          <a href="{% url 'acerca' %}" class="{% if request.path == '/acerca/' %}active{% endif %}">Acerca</a>
         </div>
       </div>
 

@@ -4,6 +4,7 @@ set -euo pipefail
 echo "=== Railway startup ==="
 
 python manage.py migrate --noinput
+python manage.py seed_operaciones
 
 echo "=== Downloading ML model (may take 2-3 min) ==="
 python scripts/ensure_model.py

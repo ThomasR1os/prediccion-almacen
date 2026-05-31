@@ -71,7 +71,8 @@ section {
 
 .about-section,
 .objectives-section,
-.benefits-section {
+.benefits-section,
+.creators-section {
   background: #FFFFFF;
   border-radius: 10px;
   padding: 2rem;
@@ -81,7 +82,8 @@ section {
 
 .about-section h2,
 .objectives-section h2,
-.benefits-section h2 {
+.benefits-section h2,
+.creators-section h2 {
   color: #2CA58D;
   margin-bottom: 1rem;
 }
@@ -144,6 +146,22 @@ section {
 .benefit-card p {
   color: #555555;
   font-size: 0.95rem;
+}
+
+.creators-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.creators-list li {
+  color: #333333;
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+}
+
+.creators-list strong {
+  color: #2CA58D;
 }
 
 /* === Responsive === */
