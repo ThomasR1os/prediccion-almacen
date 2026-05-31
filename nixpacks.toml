@@ -4,8 +4,9 @@ nixPkgs = ["python312"]
 [phases.install]
 cmds = [
   "pip install -r requirements.txt",
+  "chmod +x scripts/railway_start.sh",
   "python scripts/ensure_model.py",
 ]
 
 [start]
-cmd = "python scripts/ensure_model.py && gunicorn desercion_escolar.wsgi --bind 0.0.0.0:$PORT"
+cmd = "bash scripts/railway_start.sh"

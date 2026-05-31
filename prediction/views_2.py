@@ -1,59 +1,24 @@
 
-import warnings
-from calendar import monthrange
-from datetime import datetime
-
-import joblib
 import pandas as pd
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render
 
-from desercion_escolar.quality import clamp_prediction_values, is_git_lfs_pointer
+from desercion_escolar.quality import clamp_prediction_values
 from .catalog import ALMACENES, PRODUCTOS, PROVEEDORES, TURNOS
-from .model_storage import ensure_model, invalidate_model, model_file_available
+from .model_loader import ModelNotReadyError, get_prediction_model
 from .forms import PrediccionForm
 from .models import PrediccionAlmacen
+
+from calendar import monthrange
+from datetime import datetime
 
 MESES_DICT = {
     1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
     5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
     9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
 }
-
-
-def _load_prediction_model():
-    for attempt in range(2):
-        if not model_file_available(settings.MODEL_PATH):
-            try:
-                ensure_model(settings.MODEL_PATH, force=attempt > 0)
-            except Exception as exc:
-                raise FileNotFoundError(
-                    "No se pudo obtener el modelo de predicción. "
-                    f"Detalle: {exc}"
-                ) from exc
-        if not model_file_available(settings.MODEL_PATH):
-            raise FileNotFoundError(
-                f"No se encontró el modelo en {settings.MODEL_PATH}."
-            )
-        try:
-            with warnings.catch_warnings():
-                warnings.filterwarnings(
-                    "ignore",
-                    message="Trying to unpickle estimator*",
-                    category=UserWarning,
-                )
-                return joblib.load(settings.MODEL_PATH)
-        except (ValueError, EOFError, KeyError) as exc:
-            if attempt == 0:
-                invalidate_model(settings.MODEL_PATH)
-                continue
-            raise FileNotFoundError(
-                "El archivo del modelo está corrupto y no se pudo cargar. "
-                f"Detalle: {exc}"
-            ) from exc
 
 
 def _build_feature_maps():
@@ -106,22 +71,9 @@ def predecir(request):
             nombre_usuario = request.user.username
 
             try:
-                model = _load_prediction_model()
-            except FileNotFoundError as exc:
+                model = get_prediction_model()
+            except ModelNotReadyError as exc:
                 messages.error(request, str(exc))
-            except KeyError:
-                if is_git_lfs_pointer(settings.MODEL_PATH):
-                    messages.error(
-                        request,
-                        "El modelo no se descargó correctamente (Git LFS). "
-                        "Vuelve a desplegar o configura MODEL_URL en Railway.",
-                    )
-                else:
-                    messages.error(
-                        request,
-                        "No se pudo cargar el modelo. Verifica que scikit-learn "
-                        "coincida con la versión usada al entrenar (1.6.1).",
-                    )
             else:
                 maps = _build_feature_maps()
                 tipo_prediccion = cleaned['tipo_prediccion']
