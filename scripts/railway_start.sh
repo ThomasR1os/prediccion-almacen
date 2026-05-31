@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "=== Railway startup ==="
+
 python manage.py migrate --noinput
+
+echo "=== Downloading ML model (may take 2-3 min) ==="
 python scripts/ensure_model.py
 
-exec gunicorn desercion_escolar.wsgi:application \
-  --bind "0.0.0.0:${PORT:-8080}" \
-  --workers 1 \
-  --timeout 600 \
-  --preload
+echo "=== Starting Gunicorn ==="
+exec gunicorn desercion_escolar.wsgi:application -c gunicorn.conf.py

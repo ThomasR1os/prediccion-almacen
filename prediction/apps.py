@@ -11,9 +11,9 @@ class PredictionConfig(AppConfig):
     def ready(self):
         if self._should_skip_model_init():
             return
-        from .model_loader import initialize_prediction_model
+        from .model_loader import warmup_prediction_model
 
-        initialize_prediction_model()
+        warmup_prediction_model()
 
     @staticmethod
     def _should_skip_model_init() -> bool:
