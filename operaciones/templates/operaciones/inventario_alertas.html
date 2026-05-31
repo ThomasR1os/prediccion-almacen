@@ -9,34 +9,35 @@
     <p class="page-subtitle">Items con stock menor o igual al umbral configurado.</p>
 
     {% if alerts %}
-      <table class="table" style="margin-top: 12px;">
-        <thead>
-          <tr>
-            <th>Almacén</th>
-            <th>Item</th>
-            <th>Stock</th>
-            <th>Umbral</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for a in alerts %}
+      <div class="table-wrap stack-top">
+        <table class="table">
+          <thead>
             <tr>
-              <td><strong>{{ a.warehouse.name }}</strong></td>
-              <td>{{ a.item.name }}</td>
-              <td>{{ a.quantity }}</td>
-              <td>{{ a.low_stock_threshold }}</td>
+              <th>Almacén</th>
+              <th>Item</th>
+              <th>Stock</th>
+              <th>Umbral</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {% for a in alerts %}
+              <tr>
+                <td><strong>{{ a.warehouse.name }}</strong></td>
+                <td>{{ a.item.name }}</td>
+                <td>{{ a.quantity }}</td>
+                <td>{{ a.low_stock_threshold }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     {% else %}
-      <div class="alert">No hay alertas actualmente.</div>
+      <div class="alert stack-top">No hay alertas actualmente.</div>
     {% endif %}
 
-    <div style="margin-top:12px;">
+    <div class="stack-top">
       <a class="btn btn-secondary" href="{% url 'operaciones:inventario_list' %}">Volver</a>
     </div>
   </div>
 </div>
 {% endblock %}
-

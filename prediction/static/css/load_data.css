@@ -1,13 +1,13 @@
 /* Prediction pages (no global body overrides) */
 
-/* Contenedor principal con leve transparencia para resaltar sobre el fondo */
 .predict-container {
   max-width: 800px;
   margin: 3rem auto;
   background: rgba(255, 255, 255, 0.98);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
 }
 
 /* Título principal */
@@ -105,4 +105,35 @@
 
 .predict-message p {
   color: #333333;
+}
+
+@media (max-width: 768px) {
+  .predict-container {
+    margin: 1.5rem auto;
+    padding: 1.25rem;
+  }
+
+  .predict-title {
+    font-size: 1.35rem;
+  }
+
+  .predict-buttons {
+    flex-direction: column;
+  }
+
+  .predict-buttons button {
+    width: 100%;
+  }
+
+  .predict-submit {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .predict-container {
+    margin: 1rem auto;
+    padding: 1rem;
+    border-radius: 10px;
+  }
 }

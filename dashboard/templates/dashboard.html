@@ -5,8 +5,8 @@
 
 {% block content %}
 <div class="page">
-  <h1 class="page-title" style="text-align:center;">Dashboard</h1>
-  <p class="page-subtitle" style="text-align:center;">Predicción de almacén (filtra una carga y visualiza métricas).</p>
+  <h1 class="page-title text-center">Dashboard</h1>
+  <p class="page-subtitle text-center">Predicción de almacén (filtra una carga y visualiza métricas).</p>
 
   {% if not cargas %}
   <div class="card card-pad">
@@ -17,7 +17,7 @@
   {% else %}
   <div class="card card-pad">
     <div class="dashboard-controls">
-      <div style="flex:1; min-width: 240px;">
+      <div class="dashboard-controls__filter">
         <label for="cargaFiltro">Filtrar por Carga:</label>
         <select id="cargaFiltro">
           <option value="">-- Seleccione Fecha e ID --</option>
@@ -29,7 +29,7 @@
         </select>
       </div>
 
-      <div style="display:flex; gap:10px; align-items:end;">
+      <div class="dashboard-controls__actions">
         <button class="btn btn-primary" type="button" onclick="cargarDatos()">Filtrar</button>
         <button class="btn btn-secondary" type="button" onclick="descargarDatos()">Descargar</button>
       </div>

@@ -8,39 +8,41 @@
     <h1 class="page-title">Clientes</h1>
     <p class="page-subtitle">Crea y administra clientes para generar ventas.</p>
 
-    <form method="get" class="form" style="margin-top: 12px;">
+    <form method="get" class="form stack-top">
       <div>
         <label for="q">Buscar por nombre</label>
         <input id="q" name="q" value="{{ q }}" placeholder="Ej. Juan" />
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div class="form-actions">
         <button type="submit" class="btn btn-primary">Buscar</button>
         <a class="btn btn-secondary" href="{% url 'operaciones:clientes_create' %}">Nuevo cliente</a>
       </div>
     </form>
 
-    <div style="margin-top: 16px;">
+    <div class="stack-top-lg">
       {% if customers %}
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Teléfono</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for c in customers %}
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
               <tr>
-                <td><strong>{{ c.name }}</strong></td>
-                <td>{{ c.email|default:"—" }}</td>
-                <td>{{ c.phone|default:"—" }}</td>
-                <td>{% if c.active %}Activo{% else %}Inactivo{% endif %}</td>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Estado</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for c in customers %}
+                <tr>
+                  <td><strong>{{ c.name }}</strong></td>
+                  <td>{{ c.email|default:"—" }}</td>
+                  <td>{{ c.phone|default:"—" }}</td>
+                  <td>{% if c.active %}Activo{% else %}Inactivo{% endif %}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       {% else %}
         <div class="alert">No hay clientes para mostrar.</div>
       {% endif %}
@@ -48,4 +50,3 @@
   </div>
 </div>
 {% endblock %}
-

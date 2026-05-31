@@ -3,15 +3,15 @@
 {% block title %}Nueva venta — SmartStock{% endblock %}
 
 {% block content %}
-<div class="page">
-  <div class="card card-pad" style="max-width:980px; margin:0 auto;">
+<div class="page page-wide">
+  <div class="card card-pad">
     <h1 class="page-title">Nueva venta</h1>
     <p class="page-subtitle">Selecciona cliente y almacén, luego agrega los items.</p>
 
     <form method="post" class="form" id="sale-form">
       {% csrf_token %}
 
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="form-grid-2">
         <div>
           <label>Cliente</label>
           {{ form.customer }}
@@ -22,20 +22,20 @@
         </div>
       </div>
 
-      <div class="card card-pad" style="margin-top: 10px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div class="card card-pad stack-top">
+        <div class="sale-line-header">
           <h2 style="margin:0;">Items</h2>
           <button type="button" class="btn btn-secondary" id="add-line-btn">+ Agregar fila</button>
         </div>
         {{ formset.management_form }}
 
         {% if formset.non_form_errors %}
-          <div class="alert error" style="margin-bottom:10px;">{{ formset.non_form_errors }}</div>
+          <div class="alert error stack-top">{{ formset.non_form_errors }}</div>
         {% endif %}
 
-        <div id="sale-lines" style="margin-top: 12px;">
+        <div id="sale-lines" class="stack-top">
           {% for f in formset.forms %}
-            <div class="sale-line" style="display:grid; grid-template-columns: 1fr 180px 44px; gap:10px; align-items:end; margin-bottom:10px;">
+            <div class="sale-line">
               <div>
                 <label>Item</label>
                 {{ f.item }}
@@ -44,7 +44,7 @@
                 <label>Cantidad</label>
                 {{ f.quantity }}
               </div>
-              <div style="display:flex; justify-content:flex-end;">
+              <div class="sale-line-remove-wrap">
                 {{ f.DELETE }}
                 <button type="button" class="btn btn-secondary sale-line-remove" aria-label="Eliminar fila" title="Eliminar" style="padding:10px 12px;">
                   X
@@ -52,13 +52,13 @@
               </div>
             </div>
             {% if f.errors %}
-              <div class="alert error" style="margin-bottom:10px;">{{ f.errors }}</div>
+              <div class="alert error">{{ f.errors }}</div>
             {% endif %}
           {% endfor %}
         </div>
 
         <template id="sale-line-template">
-          <div class="sale-line" style="display:grid; grid-template-columns: 1fr 180px 44px; gap:10px; align-items:end; margin-bottom:10px;">
+          <div class="sale-line">
             <div>
               <label>Item</label>
               {{ formset.empty_form.item }}
@@ -67,7 +67,7 @@
               <label>Cantidad</label>
               {{ formset.empty_form.quantity }}
             </div>
-            <div style="display:flex; justify-content:flex-end;">
+            <div class="sale-line-remove-wrap">
               {{ formset.empty_form.DELETE }}
               <button type="button" class="btn btn-secondary sale-line-remove" aria-label="Eliminar fila" title="Eliminar" style="padding:10px 12px;">
                 X
@@ -81,7 +81,7 @@
         <div class="alert error">{{ form.errors }}</div>
       {% endif %}
 
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div class="form-actions stack-top">
         <button type="submit" class="btn btn-primary">Crear venta</button>
         <a class="btn btn-secondary" href="{% url 'operaciones:ventas_list' %}">Volver</a>
       </div>
@@ -122,7 +122,6 @@
       }
     }
 
-    // Wire existing rows
     lines.querySelectorAll('.sale-line').forEach(wireRow);
 
     addBtn.addEventListener('click', () => {
@@ -140,4 +139,3 @@
   })();
 </script>
 {% endblock %}
-

@@ -3,8 +3,8 @@
 {% block title %}Nuevo cliente — SmartStock{% endblock %}
 
 {% block content %}
-<div class="page">
-  <div class="card card-pad" style="max-width:720px; margin:0 auto;">
+<div class="page page-narrow">
+  <div class="card card-pad">
     <h1 class="page-title">Nuevo cliente</h1>
     <p class="page-subtitle">Completa los datos básicos del cliente.</p>
 
@@ -39,7 +39,7 @@
         <div class="alert error">{{ form.errors }}</div>
       {% endif %}
 
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:4px;">
+      <div class="form-actions">
         <button type="submit" class="btn btn-primary">Guardar</button>
         <a class="btn btn-secondary" href="{% url 'operaciones:clientes_list' %}">Volver</a>
       </div>
@@ -47,4 +47,3 @@
   </div>
 </div>
 {% endblock %}
-

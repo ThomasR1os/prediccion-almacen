@@ -8,12 +8,12 @@
     <h1 class="page-title">Inventario</h1>
     <p class="page-subtitle">Revisa stock por almacén y gestiona alertas.</p>
 
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="toolbar">
       <a class="btn btn-primary" href="{% url 'operaciones:inventario_adjust' %}">Ajustar inventario</a>
       <a class="btn btn-secondary" href="{% url 'operaciones:inventario_alertas' %}">Ver alertas</a>
     </div>
 
-    <form method="get" class="form" style="margin-top: 14px;">
+    <form method="get" class="form stack-top">
       <div>
         <label for="warehouse">Almacén</label>
         <select id="warehouse" name="warehouse">
@@ -25,31 +25,33 @@
           {% endfor %}
         </select>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div class="form-actions">
         <button type="submit" class="btn btn-primary">Filtrar</button>
       </div>
     </form>
 
-    <div style="margin-top: 16px;">
+    <div class="stack-top-lg">
       {% if levels %}
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Stock</th>
-              <th>Umbral</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for l in levels %}
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
               <tr>
-                <td><strong>{{ l.item.name }}</strong></td>
-                <td>{{ l.quantity }}</td>
-                <td>{{ l.low_stock_threshold }}</td>
+                <th>Item</th>
+                <th>Stock</th>
+                <th>Umbral</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for l in levels %}
+                <tr>
+                  <td><strong>{{ l.item.name }}</strong></td>
+                  <td>{{ l.quantity }}</td>
+                  <td>{{ l.low_stock_threshold }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       {% else %}
         <div class="alert">No hay niveles de inventario.</div>
       {% endif %}
@@ -57,4 +59,3 @@
   </div>
 </div>
 {% endblock %}
-

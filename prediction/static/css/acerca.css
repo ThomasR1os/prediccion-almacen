@@ -2,6 +2,7 @@
   max-width: 1200px;
   margin: auto;
   padding: 2rem;
+  width: 100%;
 }
 
 .acerca-header {
@@ -10,7 +11,7 @@
 }
 
 .acerca-header .teal {
-  color: #2CA58D;
+  color: #2ca58d;
 }
 
 .acerca-grid {
@@ -22,7 +23,8 @@
 }
 
 .acerca-text {
-  flex: 1 1 50%;
+  flex: 1 1 280px;
+  min-width: 0;
 }
 
 .acerca-text ul {
@@ -34,13 +36,14 @@
 }
 
 .acerca-image {
-  flex: 1 1 40%;
+  flex: 1 1 280px;
+  min-width: 0;
 }
 
 .acerca-image img {
   width: 100%;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .acerca-equipo {
@@ -56,13 +59,36 @@
 }
 
 .equipo-miembro {
-  width: 200px;
+  width: min(200px, 100%);
   text-align: center;
 }
 
 .equipo-miembro img {
   width: 100%;
+  max-width: 200px;
   border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .acerca-container {
+    padding: 1.25rem;
+  }
+
+  .acerca-grid {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .acerca-text,
+  .acerca-image {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .equipo-grid {
+    gap: 1.25rem;
+  }
 }

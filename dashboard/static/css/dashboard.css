@@ -1,16 +1,36 @@
 .dashboard-controls {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-.dashboard-controls button {
-  /* buttons now use .btn classes in base.css */
+.dashboard-controls__filter {
+  flex: 1;
+  min-width: 240px;
 }
 
-.dashboard-controls button:hover {
+.dashboard-controls__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dashboard-metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.dashboard-metricas .metric-card {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
 }
 
 .chart-container {
@@ -26,10 +46,41 @@
 
 canvas {
   max-height: 400px;
+  width: 100% !important;
 }
 
 @media (max-width: 768px) {
+  .dashboard-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-controls__filter {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .dashboard-controls__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .dashboard-controls__actions .btn {
+    width: 100%;
+  }
+
   .chart-container {
     padding: 10px;
+    margin: 12px auto;
+  }
+
+  canvas {
+    max-height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-metricas {
+    grid-template-columns: 1fr;
   }
 }
