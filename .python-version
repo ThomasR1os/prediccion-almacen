@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ["python312"]
+
+[start]
+cmd = "gunicorn desercion_escolar.wsgi --bind 0.0.0.0:$PORT"
