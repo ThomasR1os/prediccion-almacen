@@ -13,7 +13,7 @@ from django.shortcuts import render
 
 from desercion_escolar.quality import clamp_prediction_values, is_git_lfs_pointer
 from .catalog import ALMACENES, PRODUCTOS, PROVEEDORES, TURNOS
-from .model_storage import ensure_model, model_file_available
+from .model_storage import ensure_model, invalidate_model, model_file_available
 from .forms import PrediccionForm
 from .models import PrediccionAlmacen
 
@@ -25,21 +25,35 @@ MESES_DICT = {
 
 
 def _load_prediction_model():
-    if not model_file_available(settings.MODEL_PATH):
-        try:
-            ensure_model(settings.MODEL_PATH)
-        except Exception as exc:
+    for attempt in range(2):
+        if not model_file_available(settings.MODEL_PATH):
+            try:
+                ensure_model(settings.MODEL_PATH, force=attempt > 0)
+            except Exception as exc:
+                raise FileNotFoundError(
+                    "No se pudo obtener el modelo de predicción. "
+                    f"Detalle: {exc}"
+                ) from exc
+        if not model_file_available(settings.MODEL_PATH):
             raise FileNotFoundError(
-                "No se pudo obtener el modelo de predicción. "
+                f"No se encontró el modelo en {settings.MODEL_PATH}."
+            )
+        try:
+            with warnings.catch_warnings():
+                warnings.filterwarnings(
+                    "ignore",
+                    message="Trying to unpickle estimator*",
+                    category=UserWarning,
+                )
+                return joblib.load(settings.MODEL_PATH)
+        except (ValueError, EOFError, KeyError) as exc:
+            if attempt == 0:
+                invalidate_model(settings.MODEL_PATH)
+                continue
+            raise FileNotFoundError(
+                "El archivo del modelo está corrupto y no se pudo cargar. "
                 f"Detalle: {exc}"
             ) from exc
-    if not model_file_available(settings.MODEL_PATH):
-        raise FileNotFoundError(
-            f"No se encontró el modelo en {settings.MODEL_PATH}."
-        )
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore", message="Trying to unpickle estimator*", category=UserWarning)
-        return joblib.load(settings.MODEL_PATH)
 
 
 def _build_feature_maps():

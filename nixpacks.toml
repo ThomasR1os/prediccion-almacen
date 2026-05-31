@@ -1,10 +1,8 @@
 [phases.setup]
-nixPkgs = ["python312", "git", "git-lfs"]
+nixPkgs = ["python312"]
 
 [phases.install]
 cmds = [
-  "git lfs install",
-  "git lfs pull || true",
   "pip install -r requirements.txt",
   "python scripts/ensure_model.py",
 ]
