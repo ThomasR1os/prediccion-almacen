@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Inventario — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad">
+    <h1 class="page-title">Inventario</h1>
+    <p class="page-subtitle">Revisa stock por almacén y gestiona alertas.</p>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn btn-primary" href="{% url 'operaciones:inventario_adjust' %}">Ajustar inventario</a>
+      <a class="btn btn-secondary" href="{% url 'operaciones:inventario_alertas' %}">Ver alertas</a>
+    </div>
+
+    <form method="get" class="form" style="margin-top: 14px;">
+      <div>
+        <label for="warehouse">Almacén</label>
+        <select id="warehouse" name="warehouse">
+          <option value="">-- Todos --</option>
+          {% for w in warehouses %}
+            <option value="{{ w.id }}" {% if selected_warehouse and w.id == selected_warehouse.id %}selected{% endif %}>
+              {{ w.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+      </div>
+    </form>
+
+    <div style="margin-top: 16px;">
+      {% if levels %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Stock</th>
+              <th>Umbral</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for l in levels %}
+              <tr>
+                <td><strong>{{ l.item.name }}</strong></td>
+                <td>{{ l.quantity }}</td>
+                <td>{{ l.low_stock_threshold }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="alert">No hay niveles de inventario.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

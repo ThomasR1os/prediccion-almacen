@@ -1,0 +1,59 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse - Claro Capacitaciones</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="page--gradient">
+    <div class="container">
+        <div class="form-container">        
+            <!-- <img src="{% static 'images/Claro-Logo.png' %}" alt="Logo Claro" style="width: 100px; margin-bottom: 1rem;"> -->
+            <h1 class="title">Registrate</h1>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+          
+            <form method="POST" class="form">
+                {% csrf_token %}
+                <label for="{{ form.username.id_for_label }}">Usuario</label>
+                <div class="form-group">
+                    {{ form.username }}
+                    {% if form.username.errors %}<div class="alert error">{{ form.username.errors }}</div>{% endif %}
+                </div>
+                <label for="{{ form.email.id_for_label }}">Correo Electrónico</label>
+                <div class="form-group">
+                    {{ form.email }}
+                    <p class="help-text">Debe ser único. No se permiten correos duplicados.</p>
+                    {% if form.email.errors %}<div class="alert error">{{ form.email.errors }}</div>{% endif %}
+                </div>
+                <label for="{{ form.password.id_for_label }}">Contraseña</label>
+                <div class="form-group">
+                    {{ form.password }}
+                    <p class="help-text">Mínimo 8 caracteres con reglas de seguridad.</p>
+                    {% if form.password.errors %}<div class="alert error">{{ form.password.errors }}</div>{% endif %}
+                </div>
+                <label for="{{ form.password_confirm.id_for_label }}">Confirmar Contraseña</label>
+                <div class="form-group">
+                    {{ form.password_confirm }}
+                    {% if form.password_confirm.errors %}<div class="alert error">{{ form.password_confirm.errors }}</div>{% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Registrarse</button>
+                 <div style="margin-top: 1rem;">
+                <a href="{% url 'login' %}" class="btn btn-secondary" style="text-decoration:none;">Regresar a Inicio</a>
+            </div>
+            </form>
+           
+        </div>
+    </div>
+</body>
+</html>

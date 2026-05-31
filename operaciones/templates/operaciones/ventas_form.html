@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva venta — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad" style="max-width:980px; margin:0 auto;">
+    <h1 class="page-title">Nueva venta</h1>
+    <p class="page-subtitle">Selecciona cliente y almacén, luego agrega los items.</p>
+
+    <form method="post" class="form" id="sale-form">
+      {% csrf_token %}
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <div>
+          <label>Cliente</label>
+          {{ form.customer }}
+        </div>
+        <div>
+          <label>Almacén</label>
+          {{ form.warehouse }}
+        </div>
+      </div>
+
+      <div class="card card-pad" style="margin-top: 10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+          <h2 style="margin:0;">Items</h2>
+          <button type="button" class="btn btn-secondary" id="add-line-btn">+ Agregar fila</button>
+        </div>
+        {{ formset.management_form }}
+
+        {% if formset.non_form_errors %}
+          <div class="alert error" style="margin-bottom:10px;">{{ formset.non_form_errors }}</div>
+        {% endif %}
+
+        <div id="sale-lines" style="margin-top: 12px;">
+          {% for f in formset.forms %}
+            <div class="sale-line" style="display:grid; grid-template-columns: 1fr 180px 44px; gap:10px; align-items:end; margin-bottom:10px;">
+              <div>
+                <label>Item</label>
+                {{ f.item }}
+              </div>
+              <div>
+                <label>Cantidad</label>
+                {{ f.quantity }}
+              </div>
+              <div style="display:flex; justify-content:flex-end;">
+                {{ f.DELETE }}
+                <button type="button" class="btn btn-secondary sale-line-remove" aria-label="Eliminar fila" title="Eliminar" style="padding:10px 12px;">
+                  X
+                </button>
+              </div>
+            </div>
+            {% if f.errors %}
+              <div class="alert error" style="margin-bottom:10px;">{{ f.errors }}</div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <template id="sale-line-template">
+          <div class="sale-line" style="display:grid; grid-template-columns: 1fr 180px 44px; gap:10px; align-items:end; margin-bottom:10px;">
+            <div>
+              <label>Item</label>
+              {{ formset.empty_form.item }}
+            </div>
+            <div>
+              <label>Cantidad</label>
+              {{ formset.empty_form.quantity }}
+            </div>
+            <div style="display:flex; justify-content:flex-end;">
+              {{ formset.empty_form.DELETE }}
+              <button type="button" class="btn btn-secondary sale-line-remove" aria-label="Eliminar fila" title="Eliminar" style="padding:10px 12px;">
+                X
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      {% if form.errors %}
+        <div class="alert error">{{ form.errors }}</div>
+      {% endif %}
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="submit" class="btn btn-primary">Crear venta</button>
+        <a class="btn btn-secondary" href="{% url 'operaciones:ventas_list' %}">Volver</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const form = document.getElementById('sale-form');
+    const lines = document.getElementById('sale-lines');
+    const addBtn = document.getElementById('add-line-btn');
+    const tmpl = document.getElementById('sale-line-template');
+
+    if (!form || !lines || !addBtn || !tmpl) return;
+
+    const totalFormsInput = form.querySelector('input[name="lines-TOTAL_FORMS"]');
+    if (!totalFormsInput) return;
+
+    function hideDeleteCheckbox(row) {
+      const del = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+      if (del) {
+        del.style.display = 'none';
+      }
+    }
+
+    function markDeletedAndHide(row) {
+      const del = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+      if (del) del.checked = true;
+      row.style.display = 'none';
+    }
+
+    function wireRow(row) {
+      hideDeleteCheckbox(row);
+      const btn = row.querySelector('.sale-line-remove');
+      if (btn) {
+        btn.addEventListener('click', () => markDeletedAndHide(row));
+      }
+    }
+
+    // Wire existing rows
+    lines.querySelectorAll('.sale-line').forEach(wireRow);
+
+    addBtn.addEventListener('click', () => {
+      const idx = parseInt(totalFormsInput.value || '0', 10);
+      const html = tmpl.innerHTML.replaceAll('__prefix__', String(idx));
+      const wrap = document.createElement('div');
+      wrap.innerHTML = html.trim();
+      const row = wrap.firstElementChild;
+      if (!row) return;
+
+      lines.appendChild(row);
+      totalFormsInput.value = String(idx + 1);
+      wireRow(row);
+    });
+  })();
+</script>
+{% endblock %}
+

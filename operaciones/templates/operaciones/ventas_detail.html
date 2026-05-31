@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle venta — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad">
+    <h1 class="page-title">Venta #{{ sale.id }}</h1>
+    <p class="page-subtitle">{{ sale.customer.name }} — {{ sale.warehouse.name }}</p>
+
+    <table class="table" style="margin-top: 12px;">
+      <tbody>
+        <tr><th style="width:220px;">Cliente</th><td>{{ sale.customer.name }}</td></tr>
+        <tr><th>Almacén</th><td>{{ sale.warehouse.name }}</td></tr>
+        <tr><th>Creado por</th><td>{{ sale.created_by.username }}</td></tr>
+        <tr><th>Fecha</th><td>{{ sale.created_at }}</td></tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin:16px 0 10px 0;">Items</h2>
+    {% if sale.lines.all %}
+      <table class="table">
+        <thead>
+          <tr><th>Item</th><th>Cantidad</th></tr>
+        </thead>
+        <tbody>
+          {% for l in sale.lines.all %}
+            <tr><td><strong>{{ l.item.name }}</strong></td><td>{{ l.quantity }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="alert">Sin líneas.</div>
+    {% endif %}
+
+    <div style="margin-top:12px;">
+      <a class="btn btn-secondary" href="{% url 'operaciones:ventas_list' %}">Volver</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

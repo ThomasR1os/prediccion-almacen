@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Ventas — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad">
+    <h1 class="page-title">Ventas realizadas</h1>
+    <p class="page-subtitle">Crea ventas por cliente y descuenta inventario automáticamente.</p>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn btn-primary" href="{% url 'operaciones:ventas_create' %}">Nueva venta</a>
+    </div>
+
+    <div style="margin-top: 16px;">
+      {% if sales %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cliente</th>
+              <th>Almacén</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in sales %}
+              <tr>
+                <td><a href="{% url 'operaciones:ventas_detail' s.id %}"><strong>#{{ s.id }}</strong></a></td>
+                <td>{{ s.customer.name }}</td>
+                <td>{{ s.warehouse.name }}</td>
+                <td>{{ s.created_at }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="alert">No hay ventas registradas.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

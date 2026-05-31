@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Acerca de SmartStock{% endblock %}
+
+{% block content %}
+<div class="acerca-container">
+  <div class="acerca-header">
+    <h1>Acerca de <span class="teal">SmartStock</span></h1>
+    <p>Optimización Inteligente para la Gestión de Almacenes</p>
+  </div>
+
+  <div class="acerca-grid">
+    <div class="acerca-text">
+      <h2>¿Qué es SmartStock?</h2>
+      <p>
+        SmartStock es una solución tecnológica diseñada para monitorear, predecir y gestionar eficientemente el inventario en los almacenes. Utiliza modelos de aprendizaje automático para brindar predicciones precisas sobre cantidades unitarias, tiempos de entrega y niveles de stock.
+      </p>
+      <h2>¿Por qué SmartStock?</h2>
+      <ul>
+        <li>🔍 Visualización clara y en tiempo real de tus datos.</li>
+        <li>📈 Gráficos interactivos para análisis detallado.</li>
+        <li>🧠 Predicciones basadas en inteligencia artificial.</li>
+        <li>⏱️ Optimización del tiempo de respuesta logística.</li>
+      </ul>
+    </div>
+    <div class="acerca-image">
+      <img src="{% static 'img/almacen-1.jpg' %}" alt="Dashboard SmartStock" />
+    </div>
+  </div>
+
+  <div class="acerca-equipo">
+    <h2>Nuestro Equipo</h2>
+    <div class="equipo-grid">
+      <div class="equipo-miembro">
+        <img src="{% static 'img/acerca_imagen1.jpg' %}" alt="Founder" />
+        <h3>Rey T.</h3>
+        <p>Desarrollador Principal</p>
+      </div>
+      <div class="equipo-miembro">
+        <img src="{% static 'img/acerca_imagen2.jpg' %}" alt="Founder 2" />
+        <h3>María Q.</h3>
+        <p>Diseñadora de Experiencia</p>
+      </div>
+      <div class="equipo-miembro">
+        <img src="{% static 'img/acerca_imagen3.jpg' %}" alt="Founder 3" />
+        <h3>Carlos S.</h3>
+        <p>Analista de Datos</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Predicción — SmartStock{% endblock %}
+
+{% block body_class %}page--gradient{% endblock %}
+
+{% block content %}
+<div class="predict-container">
+  <h1 class="predict-title">Predicción de Variables Logísticas</h1>
+
+  <!-- Botones para modo de predicción -->
+  <div class="predict-buttons">
+    <button type="button" onclick="seleccionarModo('unitario')">Predicción del Día</button>
+    <button type="button" onclick="seleccionarModo('mes_completo')">Predicción del Mes</button>
+  </div>
+  <p id="modo-aviso" class="help-text" style="text-align:center; color:#b45309;">
+    Selecciona un modo de predicción antes de enviar el formulario.
+  </p>
+
+  <form action="{% url 'prediction' %}" method="post" class="predict-form">
+    {% csrf_token %}
+    <input type="hidden" name="tipo_prediccion" id="tipo_prediccion" value="">
+
+    <label for="tipo">Tipo:</label>
+    <select name="tipo" id="tipo" required>
+      <option value="" disabled selected>Seleccione tipo</option>
+      <option value="Entrada">Entrada</option>
+      <option value="Salida">Salida</option>
+    </select>
+
+    <label for="almacen">Almacén de llegada:</label>
+    <select name="almacen" id="almacen" required>
+      <option value="" disabled selected>Seleccione almacén</option>
+      {% for almacen in almacenes %}
+      <option value="{{ almacen }}">{{ almacen }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="turno">Turno:</label>
+    <select name="turno" id="turno" required>
+      <option value="" disabled selected>Seleccione turno</option>
+      {% for turno in turnos %}
+      <option value="{{ turno }}">{{ turno }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="producto">Producto:</label>
+    <select name="producto" id="producto" required>
+      <option value="" disabled selected>Seleccione producto</option>
+      {% for producto in productos %}
+      <option value="{{ producto }}">{{ producto }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="origen">Origen:</label>
+    <select name="origen" id="origen" required>
+      <option value="" disabled selected>Seleccione proveedor</option>
+      {% for origen in proveedores %}
+      <option value="{{ origen }}">{{ origen }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="mes">Mes:</label>
+    <select name="mes" id="mes" required>
+      <option value="" disabled selected>Seleccione mes</option>
+      <option value="1">Enero</option>
+      <option value="2">Febrero</option>
+      <option value="3">Marzo</option>
+      <option value="4">Abril</option>
+      <option value="5">Mayo</option>
+      <option value="6">Junio</option>
+      <option value="7">Julio</option>
+      <option value="8">Agosto</option>
+      <option value="9">Septiembre</option>
+      <option value="10">Octubre</option>
+      <option value="11">Noviembre</option>
+      <option value="12">Diciembre</option>
+    </select>
+
+    <div id="dia_mes_div" class="predict-dia" style="display: none;">
+      <label for="dia_mes">Día del mes:</label>
+      <input type="number" name="dia_mes" id="dia_mes" min="1" max="31">
+    </div>
+
+    <label for="festivo">¿Festivo?</label>
+    <select name="festivo" id="festivo" required>
+      <option value="" disabled selected>Seleccione</option>
+      <option value="0">No</option>
+      <option value="1">Sí</option>
+    </select>
+
+    <button type="submit" class="predict-submit">Predecir</button>
+  </form>
+
+  {% if resultado %}
+  <div class="predict-result">
+    <h2>Resultado de la Predicción ({{ mes }})</h2>
+    <ul>
+      <li><strong>Cantidad unitaria:</strong> {{ resultado.Cantidad_unitaria }}</li>
+      <li><strong>Bultos:</strong> {{ resultado.Bultos }}</li>
+      <li><strong>Precio Unidad:</strong> {{ resultado.PrecioUnidad }}</li>
+      <li><strong>Lead Time Días:</strong> {{ resultado.LeadTimeDias }}</li>
+      <li><strong>Stock en Almacén:</strong> {{ resultado.StockAlmacen }}</li>
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if mensaje %}
+  <div class="predict-message">
+    <p>{{ mensaje }}</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  function seleccionarModo(modo) {
+    document.getElementById('tipo_prediccion').value = modo;
+    const aviso = document.getElementById('modo-aviso');
+    if (aviso) {
+      aviso.textContent = modo === 'unitario'
+        ? 'Modo activo: predicción de un día específico.'
+        : 'Modo activo: predicción del mes completo (se guardará en BD).';
+      aviso.style.color = '#15803d';
+    }
+    const diaDiv = document.getElementById('dia_mes_div');
+    diaDiv.style.display = (modo === 'unitario') ? 'block' : 'none';
+  }
+
+  // Validación antes de enviar
+  document.querySelector('.predict-form').addEventListener('submit', function (e) {
+    const modo = document.getElementById('tipo_prediccion').value;
+    if (!modo) {
+      e.preventDefault();
+      alert('Selecciona primero un modo: Predicción del Día o del Mes.');
+      return;
+    }
+
+    const selects = this.querySelectorAll('select');
+    let valid = true;
+
+    selects.forEach(select => {
+      if (!select.value) {
+        valid = false;
+        select.style.border = '2px solid red';
+      } else {
+        select.style.border = '';
+      }
+    });
+
+    // Si el modo es "unitario", también validar el campo "día"
+    if (modo === 'unitario') {
+      const dia = document.getElementById('dia_mes');
+      if (!dia.value) {
+        valid = false;
+        dia.style.border = '2px solid red';
+      } else {
+        dia.style.border = '';
+      }
+    }
+
+    if (!valid) {
+      e.preventDefault();
+      alert('Por favor complete todos los campos antes de predecir.');
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,68 @@
+.acerca-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.acerca-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.acerca-header .teal {
+  color: #2CA58D;
+}
+
+.acerca-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.acerca-text {
+  flex: 1 1 50%;
+}
+
+.acerca-text ul {
+  padding-left: 1.2rem;
+}
+
+.acerca-text li {
+  margin-bottom: 0.5rem;
+}
+
+.acerca-image {
+  flex: 1 1 40%;
+}
+
+.acerca-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.acerca-equipo {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.equipo-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.equipo-miembro {
+  width: 200px;
+  text-align: center;
+}
+
+.equipo-miembro img {
+  width: 100%;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-bottom: 0.5rem;
+}

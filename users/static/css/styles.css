@@ -1,0 +1,99 @@
+/* Auth pages (avoid global overrides; base.css owns tokens) */
+
+/* Contenedor central */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* Formulario con fondo blanco y leve transparencia */
+.form-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Título del formulario */
+.title {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+/* Estructura general del formulario */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form p {
+  text-align: left;
+}
+
+/* inputs are styled in base.css */
+
+/* Botón principal */
+/* .btn styles come from base.css */
+
+p {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+p a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+p a:hover {
+  text-decoration: underline;
+}
+
+/* Mensajes de estado */
+.messages {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+/* use .alert from base.css */
+
+/* Campos del form con labels */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #000000;
+}
+
+.form-group input {
+  width: 100%;
+}
+
+/* Botón secundario (opcional) */
+.btn-secondary {
+  width: 100%;
+}
+
+.btn-secondary:hover {
+}
+
+/* Ayuda o texto aclaratorio */
+.help-text {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}

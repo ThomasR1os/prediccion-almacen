@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad">
+    <h1 class="page-title">Clientes</h1>
+    <p class="page-subtitle">Crea y administra clientes para generar ventas.</p>
+
+    <form method="get" class="form" style="margin-top: 12px;">
+      <div>
+        <label for="q">Buscar por nombre</label>
+        <input id="q" name="q" value="{{ q }}" placeholder="Ej. Juan" />
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a class="btn btn-secondary" href="{% url 'operaciones:clientes_create' %}">Nuevo cliente</a>
+      </div>
+    </form>
+
+    <div style="margin-top: 16px;">
+      {% if customers %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in customers %}
+              <tr>
+                <td><strong>{{ c.name }}</strong></td>
+                <td>{{ c.email|default:"—" }}</td>
+                <td>{{ c.phone|default:"—" }}</td>
+                <td>{% if c.active %}Activo{% else %}Inactivo{% endif %}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="alert">No hay clientes para mostrar.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

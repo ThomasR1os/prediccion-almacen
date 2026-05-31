@@ -1,0 +1,53 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Claro Capacitaciones</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="page--gradient">
+    <div class="container">
+        <div class="form-container">
+            <h1 class="main-title">SmartStock</h1>
+            <img src="{% static 'img/Logo_thomas.jpeg' %}" alt="Logo Claro" style="width: 200px; margin-bottom: 1rem;">
+            <h1 class="title">Iniciar Sesión</h1>
+
+            <!-- Mostrar mensajes -->
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+          <form method="POST" class="form">
+            {% csrf_token %}
+            <label for="id_email">Correo Electrónico</label>
+            <div class="form-group">
+                {{ form.email }}
+                {% if form.email.errors %}
+                  <div class="alert error">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            <label for="id_password">Contraseña</label>
+            <div class="form-group">
+                {{ form.password }}
+                {% if form.password.errors %}
+                  <div class="alert error">{{ form.password.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+        </form>
+
+            <p>¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate aquí</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Alertas de inventario — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad">
+    <h1 class="page-title">Alertas de inventario bajo</h1>
+    <p class="page-subtitle">Items con stock menor o igual al umbral configurado.</p>
+
+    {% if alerts %}
+      <table class="table" style="margin-top: 12px;">
+        <thead>
+          <tr>
+            <th>Almacén</th>
+            <th>Item</th>
+            <th>Stock</th>
+            <th>Umbral</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in alerts %}
+            <tr>
+              <td><strong>{{ a.warehouse.name }}</strong></td>
+              <td>{{ a.item.name }}</td>
+              <td>{{ a.quantity }}</td>
+              <td>{{ a.low_stock_threshold }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="alert">No hay alertas actualmente.</div>
+    {% endif %}
+
+    <div style="margin-top:12px;">
+      <a class="btn btn-secondary" href="{% url 'operaciones:inventario_list' %}">Volver</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

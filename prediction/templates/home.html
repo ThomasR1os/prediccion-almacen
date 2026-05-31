@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio — SmartStock{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="hero-text">
+    <h1>Bienvenido a <span>SmartStock</span></h1>
+    <p>Predice y optimiza la gestión de inventarios de tu almacén usando <strong>IoT</strong> y <strong>Machine Learning</strong>.</p>
+    <a href="{% url 'dashboard' %}" class="cta-button">Ir al Dashboard</a>
+  </div>
+  <div class="hero-image">
+    <img src="{% static 'img/almacen-1.jpg' %}" alt="Inventario Inteligente" id="changing-image">
+  </div>
+</div>
+
+<section class="about-section">
+  <h2>¿Qué es SmartStock?</h2>
+  <p>
+    SmartStock es una aplicación web diseñada para <strong>predecir entradas y salidas de productos</strong> en tiempo real,
+    calculando la cantidad y el precio estimado de cada artículo que ingresará o saldrá en fechas futuras,
+    basándose en el análisis de datos históricos del almacén.
+  </p>
+</section>
+
+<section class="objectives-section">
+  <h2>Objetivos</h2>
+  <ul>
+    <li>📊 Predecir la cantidad de productos que ingresarán o saldrán cada mes y día.</li>
+    <li>💰 Estimar precios unitarios probables según tendencias pasadas.</li>
+    <li>⚙️ Automatizar registros y minimizar errores manuales.</li>
+    <li>📈 Mejorar la planificación y optimizar el espacio en el almacén.</li>
+  </ul>
+</section>
+
+<section class="benefits-section">
+  <h2>¿Cómo te ayuda?</h2>
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <img src="{% static 'img/almacen-2.jpg' %}" alt="Monitoreo en tiempo real">
+      <h3>Visibilidad Total</h3>
+      <p>Consulta en tiempo real el stock disponible y el histórico de movimientos.</p>
+    </div>
+    <div class="benefit-card">
+      <img src="{% static 'img/almacen-3.jpg' %}" alt="Predicciones precisas">
+      <h3>Predicción Inteligente</h3>
+      <p>Obtén estimaciones de futuros ingresos y salidas de productos y precios unitarios.</p>
+    </div>
+    <div class="benefit-card">
+      <img src="{% static 'img/almcen-4.jpg' %}" alt="Alertas automáticas">
+      <h3>Alertas Automáticas</h3>
+      <p>Recibe notificaciones de niveles críticos para anticipar decisiones de compra o venta.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Cambiar imágenes del hero dinámicamente
+  const images = [
+    "{% static 'img/almacen-2.jpg' %}",
+    "{% static 'img/almacen-3.jpg' %}",
+    "{% static 'img/almcen-4.jpg' %}"
+  ];
+  let index = 0;
+  const changingImage = document.getElementById('changing-image');
+
+  setInterval(() => {
+    index = (index + 1) % images.length;
+    changingImage.src = images[index];
+  }, 4000); // cambia cada 4 segundos
+</script>
+{% endblock %}

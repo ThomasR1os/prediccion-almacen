@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Ajustar inventario — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad" style="max-width:820px; margin:0 auto;">
+    <h1 class="page-title">Ajuste de inventario</h1>
+    <p class="page-subtitle">Usa delta positivo para sumar y negativo para restar.</p>
+
+    <form method="post" class="form">
+      {% csrf_token %}
+
+      <div>
+        <label>Almacén</label>
+        {{ form.warehouse }}
+      </div>
+
+      <div>
+        <label>Item</label>
+        {{ form.item }}
+      </div>
+
+      <div>
+        <label>Ajuste (delta)</label>
+        {{ form.delta }}
+        {% if form.delta.help_text %}<div class="help">{{ form.delta.help_text }}</div>{% endif %}
+      </div>
+
+      <div>
+        <label>Umbral bajo stock (opcional)</label>
+        {{ form.low_stock_threshold }}
+      </div>
+
+      {% if form.errors %}
+        <div class="alert error">{{ form.errors }}</div>
+      {% endif %}
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="submit" class="btn btn-primary">Aplicar</button>
+        <a class="btn btn-secondary" href="{% url 'operaciones:inventario_list' %}">Volver</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+

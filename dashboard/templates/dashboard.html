@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <h1 class="page-title" style="text-align:center;">Dashboard</h1>
+  <p class="page-subtitle" style="text-align:center;">Predicción de almacén (filtra una carga y visualiza métricas).</p>
+
+  {% if not cargas %}
+  <div class="card card-pad">
+    <div class="alert warning">
+      No tienes cargas guardadas. Ve a <a href="{% url 'prediction' %}">Predicción</a> y genera una predicción de mes completo.
+    </div>
+  </div>
+  {% else %}
+  <div class="card card-pad">
+    <div class="dashboard-controls">
+      <div style="flex:1; min-width: 240px;">
+        <label for="cargaFiltro">Filtrar por Carga:</label>
+        <select id="cargaFiltro">
+          <option value="">-- Seleccione Fecha e ID --</option>
+          {% for carga in cargas %}
+            <option value="{{ carga.id_carga }}" data-fecha="{{ carga.fecha_carga }}">
+              {{ carga.fecha_carga }} — ID: {{ carga.id_carga }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:end;">
+        <button class="btn btn-primary" type="button" onclick="cargarDatos()">Filtrar</button>
+        <button class="btn btn-secondary" type="button" onclick="descargarDatos()">Descargar</button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div id="metricas" class="dashboard-metricas"></div>
+
+  <div class="chart-container">
+    <canvas id="graficoCantidadUnitaria"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="graficoLeadTimeDias"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="graficoStockAlmacen"></canvas>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}

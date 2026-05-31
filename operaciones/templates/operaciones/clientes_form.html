@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo cliente — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad" style="max-width:720px; margin:0 auto;">
+    <h1 class="page-title">Nuevo cliente</h1>
+    <p class="page-subtitle">Completa los datos básicos del cliente.</p>
+
+    <form method="post" class="form">
+      {% csrf_token %}
+
+      <div>
+        <label>Nombre</label>
+        {{ form.name }}
+        {% if form.name.errors %}<div class="alert error">{{ form.name.errors }}</div>{% endif %}
+      </div>
+
+      <div>
+        <label>Email (opcional)</label>
+        {{ form.email }}
+        <p class="help-text">Si lo ingresas, debe ser único entre clientes.</p>
+        {% if form.email.errors %}<div class="alert error">{{ form.email.errors }}</div>{% endif %}
+      </div>
+
+      <div>
+        <label>Teléfono (opcional)</label>
+        {{ form.phone }}
+        {% if form.phone.errors %}<div class="alert error">{{ form.phone.errors }}</div>{% endif %}
+      </div>
+
+      <div>
+        <label>Activo</label>
+        {{ form.active }}
+      </div>
+
+      {% if form.errors %}
+        <div class="alert error">{{ form.errors }}</div>
+      {% endif %}
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:4px;">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a class="btn btn-secondary" href="{% url 'operaciones:clientes_list' %}">Volver</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
