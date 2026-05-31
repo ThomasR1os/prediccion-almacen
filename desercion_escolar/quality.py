@@ -33,5 +33,17 @@ def clamp_prediction_values(raw_values):
     }
 
 
+def is_git_lfs_pointer(model_path):
+    if not model_path or not os.path.isfile(model_path):
+        return False
+    with open(model_path, "rb") as handle:
+        return handle.read(40).startswith(b"version https://git-lfs.github.com/spec/v1")
+
+
 def model_file_available(model_path):
-    return bool(model_path) and os.path.isfile(model_path)
+    return (
+        bool(model_path)
+        and os.path.isfile(model_path)
+        and not is_git_lfs_pointer(model_path)
+        and os.path.getsize(model_path) >= 1_000_000
+    )

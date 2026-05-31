@@ -11,7 +11,11 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render
 
-from desercion_escolar.quality import clamp_prediction_values, model_file_available
+from desercion_escolar.quality import (
+    clamp_prediction_values,
+    is_git_lfs_pointer,
+    model_file_available,
+)
 from .catalog import ALMACENES, PRODUCTOS, PROVEEDORES, TURNOS
 from .forms import PrediccionForm
 from .models import PrediccionAlmacen
@@ -24,6 +28,12 @@ MESES_DICT = {
 
 
 def _load_prediction_model():
+    if is_git_lfs_pointer(settings.MODEL_PATH):
+        raise FileNotFoundError(
+            "El archivo del modelo es un puntero de Git LFS, no el modelo real. "
+            "En Railway, ejecuta scripts/ensure_model.py durante el build o "
+            "configura MODEL_URL con un enlace de descarga directa."
+        )
     if not model_file_available(settings.MODEL_PATH):
         raise FileNotFoundError(
             f"No se encontró el modelo en {settings.MODEL_PATH}. "
@@ -87,6 +97,19 @@ def predecir(request):
                 model = _load_prediction_model()
             except FileNotFoundError as exc:
                 messages.error(request, str(exc))
+            except KeyError:
+                if is_git_lfs_pointer(settings.MODEL_PATH):
+                    messages.error(
+                        request,
+                        "El modelo no se descargó correctamente (Git LFS). "
+                        "Vuelve a desplegar o configura MODEL_URL en Railway.",
+                    )
+                else:
+                    messages.error(
+                        request,
+                        "No se pudo cargar el modelo. Verifica que scikit-learn "
+                        "coincida con la versión usada al entrenar (1.6.1).",
+                    )
             else:
                 maps = _build_feature_maps()
                 tipo_prediccion = cleaned['tipo_prediccion']
