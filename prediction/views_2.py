@@ -11,12 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render
 
-from desercion_escolar.quality import (
-    clamp_prediction_values,
-    is_git_lfs_pointer,
-    model_file_available,
-)
+from desercion_escolar.quality import clamp_prediction_values, is_git_lfs_pointer
 from .catalog import ALMACENES, PRODUCTOS, PROVEEDORES, TURNOS
+from .model_storage import ensure_model, model_file_available
 from .forms import PrediccionForm
 from .models import PrediccionAlmacen
 
@@ -28,16 +25,17 @@ MESES_DICT = {
 
 
 def _load_prediction_model():
-    if is_git_lfs_pointer(settings.MODEL_PATH):
-        raise FileNotFoundError(
-            "El archivo del modelo es un puntero de Git LFS, no el modelo real. "
-            "En Railway, ejecuta scripts/ensure_model.py durante el build o "
-            "configura MODEL_URL con un enlace de descarga directa."
-        )
+    if not model_file_available(settings.MODEL_PATH):
+        try:
+            ensure_model(settings.MODEL_PATH)
+        except Exception as exc:
+            raise FileNotFoundError(
+                "No se pudo obtener el modelo de predicción. "
+                f"Detalle: {exc}"
+            ) from exc
     if not model_file_available(settings.MODEL_PATH):
         raise FileNotFoundError(
-            f"No se encontró el modelo en {settings.MODEL_PATH}. "
-            "Coloca el archivo .pkl en la carpeta prediction/."
+            f"No se encontró el modelo en {settings.MODEL_PATH}."
         )
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", message="Trying to unpickle estimator*", category=UserWarning)

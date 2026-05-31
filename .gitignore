@@ -1,4 +1,5 @@
-*.pkl 
+*.pkl
+!prediction/modelo_random_forest_new.pkl
 *.zip 
 __pycache__/ 
 *.pyc 

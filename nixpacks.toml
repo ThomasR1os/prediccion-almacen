@@ -10,4 +10,4 @@ cmds = [
 ]
 
 [start]
-cmd = "gunicorn desercion_escolar.wsgi --bind 0.0.0.0:$PORT"
+cmd = "python scripts/ensure_model.py && gunicorn desercion_escolar.wsgi --bind 0.0.0.0:$PORT"
