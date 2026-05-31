@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-b3yh65a^7x1jmg-%t3idz#*f6n64+r56bp^tk27)5a7to*c6p&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver"]
+ALLOWED_HOSTS = ['prediccion-almacen1-production.up.railway.app', 'localhost', '127.0.0.1']
 
 # Application definition
 
