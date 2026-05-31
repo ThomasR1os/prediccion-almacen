@@ -29,6 +29,7 @@ urlpatterns = [
     path('',login_views.login_view,name='login'),
     path('home/',prediction_views.home,name='home'),
     path('prediction/',prediction_views.predecir,name='prediction'),
+    path('health/', prediction_views.health, name='health'),
     path('acerca/',prediction_views.acerca,name='acerca'),
     ## Aquí defines directamente las rutas del dashboard sin usar include()
     path('dashboard/', dashboard_views.dashboard_view, name='dashboard'),

@@ -1,5 +1,7 @@
 
 import pandas as pd
+from django.conf import settings
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -8,6 +10,7 @@ from django.shortcuts import render
 from desercion_escolar.quality import clamp_prediction_values
 from .catalog import ALMACENES, PRODUCTOS, PROVEEDORES, TURNOS
 from .model_loader import ModelNotReadyError, get_prediction_model
+from .model_storage import model_file_available
 from .forms import PrediccionForm
 from .models import PrediccionAlmacen
 
@@ -148,3 +151,19 @@ def home(request):
 
 def acerca(request):
     return render(request, 'acerca.html')
+
+
+def health(request):
+    if not model_file_available(settings.MODEL_PATH):
+        return JsonResponse(
+            {"status": "starting", "model": "downloading"},
+            status=503,
+        )
+    try:
+        get_prediction_model()
+    except ModelNotReadyError:
+        return JsonResponse(
+            {"status": "starting", "model": "loading"},
+            status=503,
+        )
+    return JsonResponse({"status": "ok", "model": "ready"})

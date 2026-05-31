@@ -5,7 +5,6 @@ nixPkgs = ["python312"]
 cmds = [
   "pip install -r requirements.txt",
   "chmod +x scripts/railway_start.sh",
-  "python scripts/ensure_model.py",
 ]
 
 [start]
