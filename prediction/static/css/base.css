@@ -126,35 +126,36 @@ a {
   position: sticky;
   top: 0;
   z-index: 200;
+  overflow: visible;
 }
 
 .site-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.nav-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas:
+    "brand toggle user"
+    "links links links";
+  gap: 10px 12px;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
 }
 
 .nav-brand {
+  grid-area: brand;
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .logo-img {
   height: 44px;
   width: auto;
   border-radius: 10%;
+  display: block;
 }
 
 .nav-toggle {
+  grid-area: toggle;
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -190,6 +191,7 @@ a {
 }
 
 .nav-links {
+  grid-area: links;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -214,32 +216,53 @@ a {
 
 /* === User Menu === */
 .user-menu {
+  grid-area: user;
   position: relative;
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+}
+
+.user-menu:hover,
+.user-menu.open {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .user-menu svg {
   width: 28px;
   height: 28px;
   fill: #ffffff;
+  pointer-events: none;
 }
 
 .user-dropdown {
   display: none;
   position: absolute;
-  right: 0;
   top: calc(100% + 0.5rem);
+  right: 0;
+  left: auto;
   background-color: color-mix(in srgb, var(--primary) 92%, #000);
   color: #ffffff;
   padding: 1rem;
   border-radius: 12px;
   box-shadow: var(--shadow-md);
   z-index: 300;
-  min-width: 220px;
-  max-width: min(90vw, 280px);
+  width: min(280px, calc(100vw - 32px));
+  box-sizing: border-box;
+}
+
+.user-dropdown p {
+  margin: 0 0 0.5rem;
+  word-break: break-word;
+}
+
+.user-dropdown p:last-of-type {
+  margin-bottom: 0.75rem;
 }
 
 .user-menu.open .user-dropdown {
@@ -535,10 +558,6 @@ footer {
     height: 36px;
   }
 
-  .user-dropdown {
-    right: -8px;
-  }
-
   .table th,
   .table td {
     padding: 8px 10px;
@@ -548,15 +567,9 @@ footer {
 
 @media (min-width: 901px) {
   .site-nav {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "brand links user";
     gap: 16px;
-  }
-
-  .nav-bar {
-    width: auto;
-    flex: 0 0 auto;
   }
 
   .nav-toggle {
@@ -564,7 +577,6 @@ footer {
   }
 
   .nav-links {
-    flex: 1;
     justify-content: flex-start;
     border-top: none;
     padding: 0;
