@@ -23,12 +23,14 @@
                 </div>
             {% endif %}
           
-            <form method="POST" class="form">
+            <form method="POST" class="form" novalidate>
                 {% csrf_token %}
                 <label for="{{ form.username.id_for_label }}">Usuario</label>
                 <div class="form-group">
                     {{ form.username }}
-                    {% if form.username.errors %}<div class="alert error">{{ form.username.errors }}</div>{% endif %}
+                    {% for error in form.username.errors %}
+                      <div class="alert error">{{ error }}</div>
+                    {% endfor %}
                 </div>
                 <label for="{{ form.email.id_for_label }}">Correo Electrónico</label>
                 <div class="form-group">

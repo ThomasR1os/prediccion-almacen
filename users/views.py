@@ -10,13 +10,6 @@ from .forms import UserRegisterForm, EmailLoginForm
 User = get_user_model()
 
 
-def _add_form_errors_to_messages(request, form):
-    for field, errors in form.errors.items():
-        label = field if field == '__all__' else field.capitalize()
-        for error in errors:
-            messages.error(request, f"{label}: {error}")
-
-
 def register_view(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -31,13 +24,15 @@ def register_view(request):
             else:
                 messages.success(request, '¡Registro exitoso! Ahora puedes iniciar sesión.')
                 return redirect('login')
-        _add_form_errors_to_messages(request, form)
     else:
         form = UserRegisterForm()
     return render(request, 'register.html', {'form': form})
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
     if request.method == 'POST':
         form = EmailLoginForm(request.POST)
         if form.is_valid():
@@ -71,8 +66,6 @@ def login_view(request):
                     return redirect('home')
                 else:
                     messages.error(request, 'Correo o contraseña incorrectos.')
-        else:
-            _add_form_errors_to_messages(request, form)
     else:
         form = EmailLoginForm()
     return render(request, 'login.html', {'form': form})

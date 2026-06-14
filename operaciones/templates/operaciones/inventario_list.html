@@ -36,6 +36,7 @@
           <table class="table">
             <thead>
               <tr>
+                {% if not selected_warehouse %}<th>Almacén</th>{% endif %}
                 <th>Item</th>
                 <th>Stock</th>
                 <th>Umbral</th>
@@ -44,6 +45,7 @@
             <tbody>
               {% for l in levels %}
                 <tr>
+                  {% if not selected_warehouse %}<td>{{ l.warehouse.name }}</td>{% endif %}
                   <td><strong>{{ l.item.name }}</strong></td>
                   <td>{{ l.quantity }}</td>
                   <td>{{ l.low_stock_threshold }}</td>

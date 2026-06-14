@@ -35,6 +35,20 @@ function cargarDatos() {
 }
 
 function mostrarGraficos(data, producto, mes) {
+  const chartsSection = document.getElementById('dashboard-charts');
+  if (chartsSection) {
+    chartsSection.classList.remove('dashboard-charts--collapsed');
+  }
+
+  requestAnimationFrame(() => {
+    renderCharts(data, producto, mes);
+    requestAnimationFrame(() => {
+      [chartCantidad, chartLeadTime, chartStock].forEach((chart) => chart?.resize());
+    });
+  });
+}
+
+function renderCharts(data, producto, mes) {
   data.sort((a, b) => chartDay(a) - chartDay(b));
 
   const dias = data.map(chartDay);
@@ -62,6 +76,7 @@ function mostrarGraficos(data, producto, mes) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: true,
       plugins: {
         title: {
           display: true,
@@ -92,6 +107,7 @@ function mostrarGraficos(data, producto, mes) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: true,
       plugins: {
         title: {
           display: true,
@@ -122,6 +138,7 @@ function mostrarGraficos(data, producto, mes) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: true,
       plugins: {
         title: {
           display: true,

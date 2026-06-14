@@ -39,14 +39,21 @@ class CustomerForm(forms.ModelForm):
 class InventoryAdjustForm(forms.Form):
     warehouse = forms.ModelChoiceField(queryset=Warehouse.objects.all())
     item = forms.ModelChoiceField(queryset=Item.objects.all())
-    delta = forms.IntegerField(help_text="Cantidad a sumar (+) o restar (-).")
+    delta = forms.IntegerField(
+        help_text="Cantidad a sumar (+) o restar (-). Usa 0 si solo actualizas el umbral."
+    )
     low_stock_threshold = forms.IntegerField(required=False, min_value=0)
 
     def clean(self):
         cleaned = super().clean()
         delta = cleaned.get("delta")
-        if delta is None or delta == 0:
-            raise ValidationError("El ajuste (delta) no puede ser 0.")
+        threshold = cleaned.get("low_stock_threshold")
+        if delta is None:
+            return cleaned
+        if delta == 0 and threshold is None:
+            raise ValidationError(
+                "Indica un ajuste distinto de 0 o un umbral de bajo stock."
+            )
         return cleaned
 
 
@@ -54,6 +61,10 @@ class SaleForm(forms.ModelForm):
     class Meta:
         model = Sale
         fields = ["customer", "warehouse"]
+        error_messages = {
+            "customer": {"required": "Selecciona un cliente."},
+            "warehouse": {"required": "Selecciona un almacén."},
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -61,9 +72,39 @@ class SaleForm(forms.ModelForm):
 
 
 class SaleLineForm(forms.ModelForm):
+    item = forms.ModelChoiceField(
+        queryset=Item.objects.all(),
+        required=False,
+        error_messages={
+            "invalid_choice": "Selecciona un item válido.",
+        },
+    )
+    quantity = forms.IntegerField(
+        required=False,
+        min_value=1,
+        error_messages={
+            "min_value": "La cantidad debe ser al menos 1.",
+            "invalid": "Indica una cantidad válida.",
+        },
+    )
+
     class Meta:
         model = SaleLine
         fields = ["item", "quantity"]
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("DELETE"):
+            return cleaned
+        item = cleaned.get("item")
+        quantity = cleaned.get("quantity")
+        if not item and quantity in (None, ""):
+            return cleaned
+        if not item:
+            raise ValidationError({"item": "Selecciona un item."})
+        if quantity in (None, ""):
+            raise ValidationError({"quantity": "Indica la cantidad."})
+        return cleaned
 
 
 class BaseSaleLineFormSet(BaseInlineFormSet):
@@ -95,6 +136,6 @@ SaleLineFormSet = inlineformset_factory(
     form=SaleLineForm,
     formset=BaseSaleLineFormSet,
     fields=["item", "quantity"],
-    extra=3,
+    extra=1,
     can_delete=True,
 )

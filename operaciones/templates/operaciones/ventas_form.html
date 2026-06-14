@@ -15,10 +15,12 @@
         <div>
           <label>Cliente</label>
           {{ form.customer }}
+          {% if form.customer.errors %}<div class="alert error">{{ form.customer.errors }}</div>{% endif %}
         </div>
         <div>
           <label>Almacén</label>
           {{ form.warehouse }}
+          {% if form.warehouse.errors %}<div class="alert error">{{ form.warehouse.errors }}</div>{% endif %}
         </div>
       </div>
 
@@ -39,10 +41,12 @@
               <div>
                 <label>Item</label>
                 {{ f.item }}
+                {% if f.item.errors %}<div class="alert error">{{ f.item.errors }}</div>{% endif %}
               </div>
               <div>
                 <label>Cantidad</label>
                 {{ f.quantity }}
+                {% if f.quantity.errors %}<div class="alert error">{{ f.quantity.errors }}</div>{% endif %}
               </div>
               <div class="sale-line-remove-wrap">
                 {{ f.DELETE }}
@@ -51,9 +55,6 @@
                 </button>
               </div>
             </div>
-            {% if f.errors %}
-              <div class="alert error">{{ f.errors }}</div>
-            {% endif %}
           {% endfor %}
         </div>
 
@@ -76,10 +77,6 @@
           </div>
         </template>
       </div>
-
-      {% if form.errors %}
-        <div class="alert error">{{ form.errors }}</div>
-      {% endif %}
 
       <div class="form-actions stack-top">
         <button type="submit" class="btn btn-primary">Crear venta</button>
@@ -108,10 +105,35 @@
       }
     }
 
+    function reindexRows() {
+      const rows = lines.querySelectorAll('.sale-line');
+      rows.forEach((row, index) => {
+        row.querySelectorAll('input, select, textarea').forEach((el) => {
+          if (el.name) {
+            el.name = el.name.replace(/lines-\d+-/, `lines-${index}-`);
+          }
+          if (el.id) {
+            el.id = el.id.replace(/lines-\d+-/, `lines-${index}-`);
+          }
+        });
+      });
+      totalFormsInput.value = String(rows.length);
+    }
+
+    function removeRow(row) {
+      row.remove();
+      reindexRows();
+    }
+
     function markDeletedAndHide(row) {
-      const del = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
-      if (del) del.checked = true;
-      row.style.display = 'none';
+      const pkInput = row.querySelector('input[name$="-id"]');
+      if (pkInput && pkInput.value) {
+        const del = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+        if (del) del.checked = true;
+        row.style.display = 'none';
+        return;
+      }
+      removeRow(row);
     }
 
     function wireRow(row) {
@@ -135,6 +157,22 @@
       lines.appendChild(row);
       totalFormsInput.value = String(idx + 1);
       wireRow(row);
+    });
+
+    form.addEventListener('submit', () => {
+      [...lines.querySelectorAll('.sale-line')].forEach((row) => {
+        if (row.style.display === 'none') {
+          return;
+        }
+        const item = row.querySelector('select[name$="-item"]');
+        const qty = row.querySelector('input[name$="-quantity"]');
+        const hasItem = item && item.value;
+        const hasQty = qty && qty.value;
+        if (!hasItem && !hasQty) {
+          removeRow(row);
+        }
+      });
+      reindexRows();
     });
   })();
 </script>

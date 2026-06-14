@@ -6,7 +6,7 @@
 <div class="page page-narrow">
   <div class="card card-pad">
     <h1 class="page-title">Ajuste de inventario</h1>
-    <p class="page-subtitle">Usa delta positivo para sumar y negativo para restar.</p>
+    <p class="page-subtitle">Usa delta positivo para sumar, negativo para restar, o 0 para actualizar solo el umbral.</p>
 
     <form method="post" class="form">
       {% csrf_token %}
@@ -14,26 +14,30 @@
       <div>
         <label>Almacén</label>
         {{ form.warehouse }}
+        {% if form.warehouse.errors %}<div class="alert error">{{ form.warehouse.errors }}</div>{% endif %}
       </div>
 
       <div>
         <label>Item</label>
         {{ form.item }}
+        {% if form.item.errors %}<div class="alert error">{{ form.item.errors }}</div>{% endif %}
       </div>
 
       <div>
         <label>Ajuste (delta)</label>
         {{ form.delta }}
         {% if form.delta.help_text %}<div class="help">{{ form.delta.help_text }}</div>{% endif %}
+        {% if form.delta.errors %}<div class="alert error">{{ form.delta.errors }}</div>{% endif %}
       </div>
 
       <div>
         <label>Umbral bajo stock (opcional)</label>
         {{ form.low_stock_threshold }}
+        {% if form.low_stock_threshold.errors %}<div class="alert error">{{ form.low_stock_threshold.errors }}</div>{% endif %}
       </div>
 
-      {% if form.errors %}
-        <div class="alert error">{{ form.errors }}</div>
+      {% if form.non_field_errors %}
+        <div class="alert error">{{ form.non_field_errors }}</div>
       {% endif %}
 
       <div class="form-actions">

@@ -12,9 +12,11 @@ from .models import Customer, InventoryLevel, Sale, Warehouse
 
 def _add_form_errors_to_messages(request, form):
     for field, errors in form.errors.items():
-        label = field if field == "__all__" else field.capitalize()
         for error in errors:
-            messages.error(request, f"{label}: {error}")
+            if field == "__all__":
+                messages.error(request, error)
+            else:
+                messages.error(request, f"{field.capitalize()}: {error}")
 
 
 @login_required
@@ -57,7 +59,7 @@ def inventario_list(request):
     if warehouse_id:
         selected_warehouse = get_object_or_404(Warehouse, id=warehouse_id)
         levels = levels.filter(warehouse=selected_warehouse)
-    levels = levels.order_by("item__name")
+    levels = levels.order_by("warehouse__name", "item__name")
 
     return render(
         request,
@@ -87,19 +89,19 @@ def inventario_adjust(request):
                     defaults={"quantity": 0, "low_stock_threshold": threshold or 0},
                 )
 
-                if level.quantity + delta < 0:
+                if delta != 0 and level.quantity + delta < 0:
                     form.add_error("delta", "No puedes dejar el stock en negativo.")
-                    messages.error(request, "El ajuste dejaría el stock en negativo.")
                 else:
-                    InventoryLevel.objects.filter(id=level.id).update(quantity=F("quantity") + delta)
+                    if delta != 0:
+                        InventoryLevel.objects.filter(id=level.id).update(
+                            quantity=F("quantity") + delta
+                        )
                     if threshold is not None:
                         level.low_stock_threshold = threshold
                         level.save(update_fields=["low_stock_threshold"])
 
                     messages.success(request, "Inventario ajustado correctamente.")
                     return redirect("operaciones:inventario_list")
-        else:
-            _add_form_errors_to_messages(request, form)
     else:
         form = InventoryAdjustForm()
 
@@ -147,9 +149,7 @@ def ventas_create(request):
                         lines.append(line)
 
                 if not lines:
-                    msg = "Agrega al menos una línea de venta."
-                    formset._non_form_errors.append(msg)
-                    messages.error(request, msg)
+                    formset._non_form_errors.append("Agrega al menos una línea de venta.")
                 else:
                     qty_by_item, item_names = aggregate_quantities_by_item(lines)
 
@@ -166,17 +166,16 @@ def ventas_create(request):
                             lvl = levels_by_item.get(item_id)
                             item = item_names[item_id]
                             if lvl is None:
-                                msg = f"Falta inventario para {item.name} (ejecuta: python manage.py seed_operaciones)."
-                                formset._non_form_errors.append(msg)
-                                messages.error(request, msg)
+                                formset._non_form_errors.append(
+                                    f"Falta inventario para {item.name} "
+                                    f"(ejecuta: python manage.py seed_operaciones)."
+                                )
                                 stock_ok = False
                             elif lvl.quantity < total_qty:
-                                msg = (
+                                formset._non_form_errors.append(
                                     f"Stock insuficiente para {item.name}. "
                                     f"Disponible: {lvl.quantity}, solicitado: {total_qty}."
                                 )
-                                formset._non_form_errors.append(msg)
-                                messages.error(request, msg)
                                 stock_ok = False
 
                         if stock_ok:
@@ -199,15 +198,7 @@ def ventas_create(request):
 
                             messages.success(request, f"Venta #{sale.id} creada.")
                             return redirect("operaciones:ventas_detail", sale_id=sale.id)
-            else:
-                for error in formset.non_form_errors():
-                    messages.error(request, error)
-                for f in formset.forms:
-                    for field, errors in f.errors.items():
-                        for error in errors:
-                            messages.error(request, f"{field}: {error}")
         else:
-            _add_form_errors_to_messages(request, form)
             formset = SaleLineFormSet(request.POST, prefix=SALELINE_PREFIX)
     else:
         form = SaleForm()

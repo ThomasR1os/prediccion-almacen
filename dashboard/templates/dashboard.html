@@ -37,21 +37,25 @@
   </div>
   {% endif %}
 
-  <div id="metricas" class="dashboard-metricas"></div>
+  {% if cargas %}
+  <div id="dashboard-charts" class="dashboard-charts dashboard-charts--collapsed">
+    <div id="metricas" class="dashboard-metricas"></div>
 
-  <div class="chart-container">
-    <canvas id="graficoCantidadUnitaria"></canvas>
+    <div class="chart-container">
+      <canvas id="graficoCantidadUnitaria"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="graficoLeadTimeDias"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="graficoStockAlmacen"></canvas>
+    </div>
   </div>
 
-  <div class="chart-container">
-    <canvas id="graficoLeadTimeDias"></canvas>
-  </div>
-
-  <div class="chart-container">
-    <canvas id="graficoStockAlmacen"></canvas>
-  </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{% static 'js/dashboard.js' %}"></script>
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{% static 'js/dashboard.js' %}"></script>
+  {% endif %}
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
