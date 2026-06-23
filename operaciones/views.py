@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from desercion_escolar.quality import aggregate_quantities_by_item
 from .forms import CustomerForm, InventoryAdjustForm
 from .forms import SaleForm, SaleLineFormSet, SALELINE_PREFIX
-from .models import Customer, InventoryLevel, Sale, Warehouse
+from .models import Customer, InventoryLevel, Sale, Warehouse, WeightRecord
 
 
 def _add_form_errors_to_messages(request, form):
@@ -218,5 +218,29 @@ def ventas_detail(request, sale_id: int):
 
 
 @login_required
+def peso_create(request):
+    return render(request, "operaciones/peso_create.html")
+
+
+@login_required
+def peso_list(request):
+    records = (
+        WeightRecord.objects.filter(created_by=request.user)
+        .order_by("-created_at", "-id")[:200]
+    )
+    return render(request, "operaciones/peso_list.html", {"records": records})
+
+
+@login_required
+def peso_detail(request, record_id: int):
+    record = get_object_or_404(
+        WeightRecord.objects.select_related("created_by", "scale_reading"),
+        id=record_id,
+        created_by=request.user,
+    )
+    return render(request, "operaciones/peso_detail.html", {"record": record})
+
+
+@login_required
 def peso_mockup(request):
-    return render(request, "operaciones/peso_mockup.html")
+    return redirect("operaciones:peso_create")

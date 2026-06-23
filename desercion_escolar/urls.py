@@ -22,6 +22,7 @@ from django.urls import include, path
 from users import views as login_views
 from prediction import views_2 as prediction_views
 from dashboard import views as dashboard_views
+from operaciones import peso_api as operaciones_peso_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('prediction/',prediction_views.predecir,name='prediction'),
     path('health/', prediction_views.health, name='health'),
     path('acerca/',prediction_views.acerca,name='acerca'),
+    path('api/iot/peso/', operaciones_peso_api.iot_peso_lectura, name='iot_peso_lectura'),
     ## Aquí defines directamente las rutas del dashboard sin usar include()
     path('dashboard/', dashboard_views.dashboard_view, name='dashboard'),
     path('dashboard/data/', dashboard_views.dashboard_data, name='dashboard_data'),

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Pesaje #{{ record.id }} — SmartStock{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card card-pad">
+    <h1 class="page-title">Pesaje #{{ record.id }}</h1>
+    <p class="page-subtitle">{{ record.cliente }} — {{ record.producto }} · {{ record.device_id }}</p>
+
+    <div class="table-wrap stack-top">
+      <table class="table">
+        <tbody>
+          <tr><th>Balanza</th><td>{{ record.device_id }}</td></tr>
+          <tr><th>Operador</th><td>{{ record.operador }}</td></tr>
+          <tr><th>Turno</th><td>{{ record.get_turno_display }}</td></tr>
+          <tr><th>Tipo de producto</th><td>{{ record.get_tipo_producto_display }}</td></tr>
+          <tr><th>Cliente</th><td>{{ record.cliente }}</td></tr>
+          <tr><th>Producto</th><td>{{ record.producto }}</td></tr>
+          <tr><th>Almacén</th><td>{{ record.almacen }}</td></tr>
+          <tr><th>Cantidad</th><td>{{ record.cantidad }} unidades</td></tr>
+          <tr><th>Peso esperado</th><td>{{ record.peso_esperado_kg }} kg</td></tr>
+          <tr><th>Peso real (IoT)</th><td>{{ record.peso_real_kg }} kg</td></tr>
+          <tr><th>Diferencia</th><td>{{ record.peso_diferencia_kg }} kg</td></tr>
+          <tr><th>Registrado por</th><td>{{ record.created_by.get_full_name|default:record.created_by.username }}</td></tr>
+          <tr><th>Fecha</th><td>{{ record.created_at }}</td></tr>
+          {% if record.scale_reading %}
+            <tr><th>Lectura IoT</th><td>#{{ record.scale_reading.id }} — {{ record.scale_reading.weight_kg }} kg</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="stack-top">
+      <a class="btn btn-secondary" href="{% url 'operaciones:peso_list' %}">Volver a mis registros</a>
+      <a class="btn btn-primary" href="{% url 'operaciones:peso_create' %}">Nuevo pesaje</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

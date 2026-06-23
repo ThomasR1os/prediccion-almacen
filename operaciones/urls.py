@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import peso_api, views
 
 app_name = "operaciones"
 
@@ -16,7 +16,13 @@ urlpatterns = [
     path("ventas/", views.ventas_list, name="ventas_list"),
     path("ventas/nueva/", views.ventas_create, name="ventas_create"),
     path("ventas/<int:sale_id>/", views.ventas_detail, name="ventas_detail"),
-    # Peso (mockup UI)
+    # Peso
+    path("peso/", views.peso_create, name="peso_create"),
     path("peso/mockup/", views.peso_mockup, name="peso_mockup"),
+    path("peso/live/", peso_api.peso_live, name="peso_live"),
+    path("peso/reiniciar/", peso_api.peso_reiniciar, name="peso_reiniciar"),
+    path("peso/registrar/", peso_api.peso_registrar, name="peso_registrar"),
+    path("peso/registros/", views.peso_list, name="peso_list"),
+    path("peso/registros/<int:record_id>/", views.peso_detail, name="peso_detail"),
 ]
 

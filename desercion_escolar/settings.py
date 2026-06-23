@@ -153,3 +153,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 MODEL_PATH = os.path.join(BASE_DIR,'prediction','modelo_random_forest_new.pkl')
+
+# Clave para dispositivos IoT (balanzas). En producción definir IOT_API_KEY en el entorno.
+IOT_API_KEY = os.environ.get("IOT_API_KEY", "dev-iot-key-change-me")

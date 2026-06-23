@@ -26,12 +26,12 @@
       <div class="nav-links" id="nav-links">
         {% if user.is_authenticated %}
         <a href="{% url 'home' %}" class="{% if request.path == '/home/' %}active{% endif %}">Inicio</a>
+        <a href="{% url 'operaciones:inventario_list' %}" class="{% if request.path|slice:':23' == '/operaciones/inventario/' %}active{% endif %}">Inventario</a>
+        <a href="{% url 'operaciones:peso_create' %}" class="{% if request.path|slice:':18' == '/operaciones/peso/' %}active{% endif %}">Peso / Compras</a>
+        <a href="{% url 'operaciones:ventas_list' %}" class="{% if request.path|slice:':19' == '/operaciones/ventas/' %}active{% endif %}">Ventas</a>
         <a href="{% url 'prediction' %}" class="{% if request.path == '/prediction/' %}active{% endif %}">Predicción</a>
         <a href="{% url 'dashboard' %}" class="{% if request.path|slice:':11' == '/dashboard/' %}active{% endif %}">Dashboard</a>
-        <a href="{% url 'operaciones:inventario_list' %}" class="{% if request.path|slice:':23' == '/operaciones/inventario/' %}active{% endif %}">Inventario</a>
-        <a href="{% url 'operaciones:ventas_list' %}" class="{% if request.path|slice:':19' == '/operaciones/ventas/' %}active{% endif %}">Ventas</a>
         <a href="{% url 'operaciones:clientes_list' %}" class="{% if request.path|slice:':21' == '/operaciones/clientes/' %}active{% endif %}">Clientes</a>
-        <a href="{% url 'operaciones:peso_mockup' %}" class="{% if request.path|slice:':18' == '/operaciones/peso/' %}active{% endif %}">Peso</a>
         {% endif %}
         <a href="{% url 'acerca' %}" class="{% if request.path == '/acerca/' %}active{% endif %}">Acerca</a>
         {% if not user.is_authenticated %}

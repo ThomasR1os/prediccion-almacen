@@ -1,6 +1,16 @@
 from django.contrib import admin
 
-from .models import Customer, InventoryLevel, Item, Sale, SaleLine, Warehouse
+from .models import (
+    Customer,
+    InventoryLevel,
+    Item,
+    Sale,
+    SaleLine,
+    ScaleDeviceState,
+    ScaleReading,
+    Warehouse,
+    WeightRecord,
+)
 
 
 @admin.register(Warehouse)
@@ -40,3 +50,33 @@ class SaleAdmin(admin.ModelAdmin):
     search_fields = ["customer__name", "created_by__username"]
     list_display = ["id", "created_at", "customer", "warehouse", "created_by"]
     inlines = [SaleLineInline]
+
+
+@admin.register(ScaleReading)
+class ScaleReadingAdmin(admin.ModelAdmin):
+    list_filter = ["device_id", "created_at"]
+    search_fields = ["device_id"]
+    list_display = ["id", "device_id", "weight_kg", "created_at"]
+    readonly_fields = ["device_id", "weight_kg", "created_at"]
+
+
+@admin.register(ScaleDeviceState)
+class ScaleDeviceStateAdmin(admin.ModelAdmin):
+    search_fields = ["device_id"]
+    list_display = ["device_id", "weight_kg", "last_reading", "updated_at"]
+
+
+@admin.register(WeightRecord)
+class WeightRecordAdmin(admin.ModelAdmin):
+    list_filter = ["turno", "tipo_producto", "device_id", "created_at"]
+    search_fields = ["cliente", "producto", "operador", "device_id", "created_by__username"]
+    list_display = [
+        "id",
+        "device_id",
+        "cliente",
+        "producto",
+        "peso_real_kg",
+        "created_by",
+        "created_at",
+    ]
+    readonly_fields = ["created_at"]

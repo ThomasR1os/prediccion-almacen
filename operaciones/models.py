@@ -126,3 +126,83 @@ class SaleLine(models.Model):
 
     def __str__(self) -> str:
         return f"{self.sale_id} - {self.item} x {self.quantity}"
+
+
+class ScaleReading(models.Model):
+    device_id = models.CharField(max_length=50, db_index=True)
+    weight_kg = models.DecimalField(max_digits=10, decimal_places=3)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        verbose_name = "Lectura de balanza"
+        verbose_name_plural = "Lecturas de balanza"
+        ordering = ["-created_at", "-id"]
+
+    def __str__(self) -> str:
+        return f"{self.device_id}: {self.weight_kg} kg"
+
+
+class WeightRecord(models.Model):
+    TURNO_CHOICES = [
+        ("mañana", "Mañana"),
+        ("tarde", "Tarde"),
+        ("noche", "Noche"),
+    ]
+    TIPO_CHOICES = [
+        ("saco", "Saco"),
+        ("caja", "Caja"),
+    ]
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="weight_records",
+    )
+    device_id = models.CharField(max_length=50, db_index=True)
+    operador = models.CharField(max_length=150)
+    turno = models.CharField(max_length=20, choices=TURNO_CHOICES)
+    tipo_producto = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    cliente = models.CharField(max_length=150)
+    producto = models.CharField(max_length=150)
+    almacen = models.CharField(max_length=150)
+    cantidad = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    peso_esperado_kg = models.DecimalField(max_digits=10, decimal_places=3)
+    peso_real_kg = models.DecimalField(max_digits=10, decimal_places=3)
+    peso_diferencia_kg = models.DecimalField(max_digits=10, decimal_places=3)
+    scale_reading = models.ForeignKey(
+        ScaleReading,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="weight_records",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        verbose_name = "Registro de pesaje"
+        verbose_name_plural = "Registros de pesaje"
+        ordering = ["-created_at", "-id"]
+
+    def __str__(self) -> str:
+        return f"Pesaje #{self.id} — {self.device_id} ({self.peso_real_kg} kg)"
+
+
+class ScaleDeviceState(models.Model):
+    device_id = models.CharField(max_length=50, unique=True)
+    weight_kg = models.DecimalField(max_digits=10, decimal_places=3, default=0)
+    last_reading = models.ForeignKey(
+        ScaleReading,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Estado de balanza"
+        verbose_name_plural = "Estados de balanza"
+        ordering = ["device_id"]
+
+    def __str__(self) -> str:
+        return f"{self.device_id}: {self.weight_kg} kg"
